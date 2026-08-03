@@ -1,0 +1,49 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-32319686bd755bba1eb60c366cdaf33f46d67c55",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "compilerType": "solc",
+  "toolVersions": {
+    "hardhat": "3.12.0"
+  },
+  "userSourceNameMap": {
+    "contracts/InvoiceRegistry.sol": "project/contracts/InvoiceRegistry.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/InvoiceRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\n\r\ncontract InvoiceRegistry {\r\n\r\n\r\n    address public escrowContract;\r\n\r\n\r\n    struct Invoice {\r\n\r\n        uint256 id;\r\n\r\n        address owner;\r\n\r\n        uint256 amount;\r\n\r\n        uint256 createdAt;\r\n\r\n        bool paid;\r\n\r\n    }\r\n\r\n\r\n\r\n    uint256 public invoiceCount;\r\n\r\n\r\n    mapping(uint256 => Invoice) public invoices;\r\n\r\n\r\n\r\n    modifier onlyEscrow(){\r\n\r\n        require(\r\n            msg.sender == escrowContract,\r\n            \"Only escrow allowed\"\r\n        );\r\n\r\n        _;\r\n\r\n    }\r\n\r\n\r\n\r\n    function setEscrowContract(\r\n        address _escrow\r\n    ) external {\r\n\r\n        require(\r\n            escrowContract == address(0),\r\n            \"Already set\"\r\n        );\r\n\r\n        escrowContract = _escrow;\r\n\r\n    }\r\n\r\n\r\n\r\n\r\n    function createInvoice(\r\n        uint256 _amount\r\n    ) external {\r\n\r\n\r\n        invoiceCount++;\r\n\r\n\r\n        invoices[invoiceCount] =\r\n        Invoice(\r\n\r\n            invoiceCount,\r\n\r\n            msg.sender,\r\n\r\n            _amount,\r\n\r\n            block.timestamp,\r\n\r\n            false\r\n\r\n        );\r\n\r\n\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n    function markPaid(\r\n        uint256 _id\r\n    )\r\n    external\r\n    onlyEscrow\r\n    {\r\n\r\n\r\n        invoices[_id].paid = true;\r\n\r\n\r\n    }\r\n\r\n\r\n}"
+      }
+    }
+  }
+}
