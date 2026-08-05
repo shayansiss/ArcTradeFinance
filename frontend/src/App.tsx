@@ -194,6 +194,26 @@ name:"mint",
 outputs:[],
 stateMutability:"nonpayable",
 type:"function"
+},
+
+{
+inputs:[
+{
+internalType:"address",
+name:"account",
+type:"address"
+}
+],
+name:"balanceOf",
+outputs:[
+{
+internalType:"uint256",
+name:"",
+type:"uint256"
+}
+],
+stateMutability:"view",
+type:"function"
 }
 ];
 
@@ -257,15 +277,9 @@ window.ethereum
 
 const usdc =
 new ethers.Contract(
-
 USDC_ADDRESS,
-
-[
-"function balanceOf(address) view returns(uint256)"
-],
-
+usdcABI,
 provider
-
 );
 
 
