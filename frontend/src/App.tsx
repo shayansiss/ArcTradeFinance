@@ -176,6 +176,27 @@ type:"function"
 
 ];
 
+const usdcABI = [
+{
+inputs:[
+{
+internalType:"address",
+name:"to",
+type:"address"
+},
+{
+internalType:"uint256",
+name:"amount",
+type:"uint256"
+}
+],
+name:"mint",
+outputs:[],
+stateMutability:"nonpayable",
+type:"function"
+}
+];
+
 
 function App(){
 
@@ -441,6 +462,62 @@ setEscrows(list);
 catch(e){
 
 console.log(e);
+
+}
+
+}
+async function mintUSDC(){
+
+try{
+
+const provider =
+new ethers.BrowserProvider(
+window.ethereum
+);
+
+
+const signer =
+await provider.getSigner();
+
+
+const usdc =
+new ethers.Contract(
+USDC_ADDRESS,
+usdcABI,
+signer
+);
+
+
+const amount =
+ethers.parseUnits(
+"1000",
+18
+);
+
+
+const tx =
+await usdc.mint(
+account,
+amount
+);
+
+
+await tx.wait();
+
+
+alert("1000 Test USDC Minted");
+
+
+loadBalance(account);
+
+
+}
+catch(error:any){
+
+alert(
+error.reason ||
+error.message
+);
 
 }
 
@@ -881,6 +958,9 @@ account.slice(0,10)+"..."
 
 </button>
 
+<button onClick={mintUSDC}>
+Get 1000 Test USDC
+</button>
 
 <div className="wallet-box">
 
