@@ -274,7 +274,7 @@ window.ethereum
 );
 
 
-
+console.log("USDC ADDRESS:", USDC_ADDRESS);
 const usdc =
 new ethers.Contract(
 USDC_ADDRESS,
@@ -523,7 +523,7 @@ alert("1000 Test USDC Minted");
 
 await loadBalance(account);
 
-window.location.reload();
+
 
 
 }
@@ -590,7 +590,7 @@ alert("Invoice Created");
 
 await loadInvoices();
 
-window.location.reload();
+
 
 
 
