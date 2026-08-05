@@ -335,7 +335,7 @@ provider
 const count =
 await contract.invoiceCount();
 
-
+console.log("Invoice Count:", Number(count));
 
 let list:any[]=[];
 
@@ -357,20 +357,20 @@ list.push({
 
 id:i,
 
-owner:data.owner,
+owner:data[1],
 
 amount:
 ethers.formatUnits(
-data.amount,
+data[2],
 18
 ),
 
 date:
 new Date(
-Number(data.createdAt)*1000
+Number(data[3])*1000
 ).toLocaleString(),
 
-paid:data.paid
+paid:data[4]
 
 });
 
@@ -521,8 +521,9 @@ await tx.wait();
 
 alert("1000 Test USDC Minted");
 
+await loadBalance(account);
 
-loadBalance(account);
+window.location.reload();
 
 
 }
@@ -587,9 +588,9 @@ await tx.wait();
 
 alert("Invoice Created");
 
+await loadInvoices();
 
-
-loadInvoices();
+window.location.reload();
 
 
 
@@ -869,19 +870,15 @@ console.log(e);
 
 useEffect(()=>{
 
-
-if(window.ethereum){
-
+if(window.ethereum && account){
 
 loadInvoices();
-
 loadEscrows();
-
 
 }
 
+},[account]);
 
-},[]);
 useEffect(()=>{
 
 if(ethers.isAddress(seller)){
