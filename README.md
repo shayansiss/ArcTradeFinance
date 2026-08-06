@@ -2,108 +2,211 @@
 
 ## Decentralized Invoice Financing Platform on Arc
 
-ArcTrade Finance is a stablecoin-based invoice financing platform built on Arc.
+ArcTrade Finance is a decentralized invoice financing platform built on the Arc blockchain.
 
-The platform enables Small and Medium Enterprises (SMEs) to create invoices, lock USDC in escrow, and securely release payments to sellers using programmable smart contracts.
+The platform enables buyers to create invoices, lock Test USDC into smart-contract escrows, and securely release payments to sellers through transparent on-chain transactions.
 
-The goal is to simplify trade finance workflows by providing transparent settlement, automated escrow management, and verifiable payment history.
+ArcTrade Finance demonstrates how programmable stablecoin payments can simplify trade finance by replacing manual settlement with automated smart contracts.
 
 ---
 
-## Features
+# Live Demo
+
+https://arctrade---finance.pages.dev/
+
+---
+
+# GitHub Repository
+
+https://github.com/shayansiss/ArcTradeFinance
+
+---
+
+# Project Overview
+
+Traditional invoice financing often relies on centralized intermediaries, manual verification, and slow settlement processes.
+
+ArcTrade Finance automates the entire workflow by combining:
+
+- Invoice creation
+- Smart contract escrow
+- Stablecoin settlement
+- On-chain payment verification
+
+The platform demonstrates a complete invoice financing workflow powered by Arc.
+
+---
+
+# Features
 
 - MetaMask wallet connection
-- Create invoice workflow
-- USDC-based settlement
-- Smart contract escrow system
-- Secure seller payment release
-- Invoice history tracking
-- Escrow transaction history
+- Test USDC balance management
+- Invoice creation
+- Seller address verification
+- Smart contract escrow creation
+- Secure payment locking
+- Seller payment release
+- Invoice history
+- Escrow history
 - Automated payment workflow
 
 ---
 
-## Architecture
+# Working MVP
 
-```
-                 User Wallet
-                     |
-                  MetaMask
-                     |
-                     |
+The MVP demonstrates the complete on-chain workflow:
+
+1. Connect Wallet
+2. Mint Test USDC
+3. View wallet balance
+4. Enter seller wallet
+5. Create invoice
+6. Create escrow
+7. Lock payment inside escrow
+8. Release payment
+9. Verify seller balance
+10. Review invoice and escrow history
+
+---
+
+# Architecture
+
+```text
+                     User Wallet
+                         │
+                 MetaMask / EVM Wallet
+                         │
+                         │
             React + TypeScript Frontend
-                     |
-                     |
-             Solidity Smart Contracts
-                     |
-        --------------------------------
-        |              |               |
- InvoiceRegistry    MockUSDC     InvoiceEscrow
-        |                              |
-        |                              |
-        ----------- USDC Escrow --------
-                       |
-                Seller Wallet
+                         │
+                         │
+                    ethers.js
+                         │
+                         │
+                 ┌─────────────────┐
+                 │  Arc Blockchain │
+                 └─────────────────┘
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+        ▼                ▼                ▼
+
+ Invoice Registry    Escrow Contract    Test USDC
+  Smart Contract     Smart Contract       Token
+
+        │                │
+        ▼                ▼
+
+ Create Invoice     Lock Payment
+
+        │                │
+        └────────┬───────┘
+                 ▼
+
+          Release Payment
+
+                 ▼
+
+            Seller Wallet
 ```
 
 ---
+
+# Smart Contracts
+
+## InvoiceRegistry
+
+Responsible for:
+
+- Invoice creation
+- Invoice storage
+- Invoice ownership
+- Invoice status tracking
+
+---
+
+## InvoiceEscrow
+
+Responsible for:
+
+- Locking Test USDC
+- Escrow creation
+- Secure payment management
+- Payment release
+- Transaction verification
+
+---
+
+## Test USDC
+
+A test implementation of USDC used to demonstrate the complete stablecoin payment workflow during development and testing.
+
+---
+
+# Technology Stack
+
+## Blockchain
+
+- Arc Blockchain (EVM)
 
 ## Smart Contracts
 
-### InvoiceRegistry
-
-Handles:
-- Invoice creation
-- Invoice records
-- Invoice tracking
-
-### InvoiceEscrow
-
-Handles:
-- USDC locking
-- Escrow management
-- Seller payment release
-
-### MockUSDC
-
-A test stablecoin used for demonstrating the USDC payment workflow.
-
----
-
-## Technology Stack
-
-- Arc Blockchain
 - Solidity
 - Hardhat
+- OpenZeppelin
+
+## Frontend
+
 - React
 - TypeScript
-- Ethers.js
+- Vite
+- ethers.js
+
+## Wallet
+
 - MetaMask
-- USDC Stablecoin Workflow
+
+## Stablecoin
+
+- Test USDC
 
 ---
 
-## Running Locally
+# Security
 
-### Install dependencies
+ArcTrade Finance uses smart-contract-based escrow to guarantee transparent payment execution.
+
+Security features include:
+
+- Non-custodial escrow
+- On-chain payment verification
+- Transparent transaction history
+- Trustless payment release
+- Immutable invoice records
+
+---
+
+# Running Locally
+
+## Install dependencies
 
 ```bash
 npm install
 ```
 
-### Start local blockchain
+## Start local blockchain
 
 ```bash
 npx hardhat node
 ```
 
-### Deploy smart contracts
+## Deploy smart contracts
 
 ```bash
 npx hardhat ignition deploy ignition/modules/ArcTradeFinance.ts --network localhost
 ```
 
-### Start frontend
+## Start frontend
 
 ```bash
 cd frontend
@@ -113,21 +216,21 @@ npm run dev
 
 ---
 
-## Local Contract Addresses
+# Local Contract Addresses
 
-### InvoiceRegistry
+## InvoiceRegistry
 
 ```
 0x5FbDB2315678afecb367f032d93F642f64180aa3
 ```
 
-### MockUSDC
+## Test USDC
 
 ```
 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
 ```
 
-### InvoiceEscrow
+## InvoiceEscrow
 
 ```
 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
@@ -135,44 +238,80 @@ npm run dev
 
 ---
 
-## Hackathon Submission
+# Demo Flow
 
-Track:
-
-**Best SME Trade Finance & Working Capital Workflow**
-
-Challenge:
-
-**The Stablecoins Commerce Stack Challenge by Arc (Circle)**
-
----
-
-## Circle Product Feedback
-
-### Why we chose USDC
-
-USDC provides a reliable dollar-denominated settlement layer for SME trade finance workflows.
-
-### What worked well
-
-USDC enables transparent, programmable, and automated payment flows through smart contracts.
-
-### What could be improved
-
-More beginner-friendly Arc examples and clearer developer onboarding documentation would help developers build faster.
-
-### Recommendations
-
-More reference implementations combining USDC, escrow, and real-world business workflows would improve developer experience.
+1. Connect MetaMask
+2. Mint Test USDC
+3. Verify wallet balance
+4. Enter seller address
+5. Create invoice
+6. Create escrow
+7. Lock payment
+8. Release payment
+9. Verify seller balance
+10. Review invoice and escrow history
 
 ---
 
-## Demo Flow
+# Hackathon Submission
 
-1. Connect wallet
-2. View USDC balance
-3. Enter seller address
-4. Create invoice
-5. Lock payment in escrow
-6. Release payment to seller
-7. View transaction history
+## Challenge
+
+**The Stablecoins Commerce Stack Challenge**
+
+Powered by:
+
+- Arc
+- Circle
+
+---
+
+## Track
+
+**SME Trade Finance & Stablecoin Payment Infrastructure**
+
+---
+
+# Product Feedback
+
+## Why Arc
+
+Arc provides a familiar EVM environment that allows developers to build production-ready financial applications quickly.
+
+## Why Stablecoins
+
+Stablecoins enable transparent, programmable, and near-instant settlement while reducing payment friction.
+
+## What Worked Well
+
+- Excellent EVM compatibility
+- Simple deployment workflow
+- Smooth smart contract development
+- Reliable stablecoin payment architecture
+
+## Recommendations
+
+Future developer experience could be improved by:
+
+- More Arc-specific documentation
+- Additional real-world business examples
+- More stablecoin integration tutorials
+- Production-ready escrow reference implementations
+
+---
+
+# Future Roadmap
+
+- Native USDC integration
+- Multi-invoice financing
+- Business identity verification
+- Invoice NFT receipts
+- Institutional liquidity pools
+- Multi-signature escrow approval
+- Cross-border stablecoin settlement
+
+---
+
+# License
+
+MIT License
