@@ -257,6 +257,8 @@ await provider.send(
 
 setAccount(accounts[0]);
 
+setInvoices([]);
+setEscrows([]);
 
 await loadBalance(accounts[0]);
 
@@ -307,7 +309,7 @@ bal,
 
 
 
-async function loadInvoices(){
+async function loadInvoices(address:string){
 
 try{
 
@@ -347,11 +349,10 @@ i<=Number(count);
 i++
 ){
 
-
 const data =
 await contract.invoices(i);
 
-
+if(data[1].toLowerCase() === address.toLowerCase()){
 
 list.push({
 
@@ -359,14 +360,9 @@ id:i,
 
 owner:data[1],
 
-amount:
-ethers.formatUnits(
-data[2],
-18
-),
+amount:ethers.formatUnits(data[2],18),
 
-date:
-new Date(
+date:new Date(
 Number(data[3])*1000
 ).toLocaleString(),
 
@@ -374,16 +370,15 @@ paid:data[4]
 
 });
 
-
 }
 
-
+}
 
 setInvoices(list);
 
-
-
 }
+
+
 catch(e){
 
 console.log(e);
@@ -396,7 +391,7 @@ console.log(e);
 
 
 
-async function loadEscrows(){
+async function loadEscrows(address:string){
 
 try{
 
@@ -421,8 +416,11 @@ provider
 
 
 
+
+
 const count =
 await contract.escrowCount();
+console.log("ESCROW COUNT:", Number(count));
 
 
 
@@ -439,6 +437,12 @@ i++
 
 const data =
 await contract.escrows(i);
+
+if(
+data.buyer.toLowerCase() === address.toLowerCase()
+||
+data.seller.toLowerCase() === address.toLowerCase()
+){
 
 
 
@@ -466,7 +470,7 @@ released:data.released
 
 }
 
-
+}
 
 setEscrows(list);
 
@@ -585,11 +589,23 @@ amountWei
 await tx.wait();
 
 
+const accounts = await window.ethereum.request({
+ method:"eth_accounts"
+});
+
+await loadInvoices(accounts[0]);
+
 
 alert("Invoice Created");
 
-await loadInvoices();
 
+
+
+
+
+
+
+await loadInvoices(accounts[0]);
 
 
 
@@ -623,13 +639,21 @@ alert("Invalid Seller Address");
 return;
 
 }
-
+console.log("Creating escrow:");
+console.log("Invoice ID:", invoice.id);
+console.log("Owner:", invoice.owner);
+console.log("Amount:", invoice.amount);
+console.log("Current wallet:", account);
 
 
 const provider =
 new ethers.BrowserProvider(
 window.ethereum
 );
+
+
+
+
 
 
 
@@ -696,28 +720,25 @@ signer
 
 const tx =
 await contract.createEscrow(
-
 invoice.id,
-
 seller,
-
 amountWei
-
 );
 
-
+console.log("Escrow TX:", tx.hash);
 
 await tx.wait();
 
-
-
+console.log("Escrow Created On Chain");
 
 alert("Escrow Created");
 
+const accounts = await window.ethereum.request({
+  method: "eth_accounts"
+});
 
-
-loadEscrows();
-
+await loadEscrows(accounts[0]);
+await loadInvoices(accounts[0]);
 
 
 }
@@ -782,9 +803,9 @@ alert("Payment Released");
 
 
 
-loadEscrows();
+loadEscrows(account);
 
-loadInvoices();
+loadInvoices(account);
 
 
 
@@ -872,8 +893,8 @@ useEffect(()=>{
 
 if(window.ethereum && account){
 
-loadInvoices();
-loadEscrows();
+loadInvoices(account);
+loadEscrows(account);
 
 }
 
@@ -1092,9 +1113,9 @@ Invoice History
 
 
 {
-
-invoices.map(i=>(
-
+invoices
+.filter(i => i.owner.toLowerCase() === account.toLowerCase())
+.map(i => (
 
 <div key={i.id}>
 
@@ -1154,10 +1175,6 @@ i.paid
 
 
 
-{
-
-!i.paid &&
-
 <button
 
 onClick={
@@ -1171,9 +1188,6 @@ onClick={
 Create Escrow
 
 </button>
-
-}
-
 
 
 </div>
@@ -1190,8 +1204,13 @@ Escrow History
 
 
 {
-
-escrows.map(e=>(
+escrows
+.filter(
+e =>
+e.buyer.toLowerCase() === account.toLowerCase() ||
+e.seller.toLowerCase() === account.toLowerCase()
+)
+.map(e => (
 
 
 <div key={e.id}>
